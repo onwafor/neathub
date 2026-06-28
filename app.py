@@ -21,6 +21,51 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+
+.notice-bar{
+    width:100%;
+    background:#003049;
+    border-left:5px solid #00e5ff;
+    border-right:5px solid #00e5ff;
+    overflow:hidden;
+    padding:10px 0;
+    margin-bottom:15px;
+}
+
+.notice-bar span{
+    display:inline-block;
+    white-space:nowrap;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    animation:scroll-left 38s linear infinite;
+    padding-left:100%;
+}
+
+@keyframes scroll-left{
+    from{
+        transform:translateX(0);
+    }
+    to{
+        transform:translateX(-100%);
+    }
+}
+
+</style>
+
+<div class="notice-bar">
+<span>
+
+⚠️ PROTOTYPE VERSION • This is the Prototype Edition of the Grid Hosting Capacity (GHC) Intelligence Engine...  For the full licensed institutional deployment and customization, please contact the National Energy AI Training Hub (NEAT-Hub), Department of Mechanical Engineering, Ahmadu Bello University, Zaria, or visit www . neat-hub . abu . edu . ng/contact.
+
+</span>
+</div>
+
+""", unsafe_allow_html=True)
+
+
 plt.style.use('dark_background')
 
 # =====================================================
@@ -29,6 +74,48 @@ plt.style.use('dark_background')
 st.markdown(
     """
     <style>
+
+    header[data-testid="stHeader"] {
+    display: none;
+    }
+
+    .block-container {
+    padding-top: 0rem;
+    }
+
+    [data-testid="stSidebar"] {
+    min-width: 650px;
+    max-width: 750px;
+    }
+
+    /* Hide hamburger menu */
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    /* Hide footer */
+    footer {
+        visibility: hidden;
+    }
+
+    /* Hide header */
+    header {
+        visibility: hidden;
+    }
+
+    /* Hide top-right toolbar */
+    [data-testid="stToolbar"] {
+        display: none;
+    }
+
+    /* Hide deploy button */
+    [data-testid="stDecoration"] {
+        display: none;
+    }
+
+    
+
+
 
     .stApp {
         background-color: #081018;
@@ -370,7 +457,7 @@ prediction = model.predict(X_input)[0]
 proba = model.predict_proba(X_input)[0]
 confidence = np.max(proba) * 100
 
-colR1, colR2 = st.columns([2,3])
+colR1, colR2 = st.columns([1,2])
 
 # =====================================================
 # LEFT PANEL
@@ -498,6 +585,7 @@ with colR1:
         use_container_width=True
     )
 
+
     
 
 # =====================================================
@@ -554,6 +642,24 @@ with colR2:
     except Exception as e:
         st.error("SHAP explanation could not be generated.")
         st.exception(e)
+
+
+#st.markdown("### AI Interpretation")
+
+if prediction == 0:
+    st.success(
+        "The network can SAFELY host the proposed DG under current operating conditions."
+    )
+
+elif prediction == 1:
+    st.warning(
+        "The network is approaching OPERATIONAL CONSTRAINTS and may require mitigation measures."
+    )
+
+else:
+    st.error(
+        "The proposed DG level may introduce SIGNIFICANT operational RISKS including overloads and reverse power flow."
+    )
 
 st.divider()
 # =====================================================
